@@ -27,6 +27,12 @@ config(['$locationProvider', '$routeProvider', function($locationProvider, $rout
   $scope.controllerFn = function (arg) {
     console.log('testController.controllerFn ' + arg);
   }
+
+  $scope.pushEvent = function () {
+    $scope.$broadcast('globalEvent'); //parents yelling that dinner is ready so everyone
+    //$scope.$emit('globalEvent'); adults talking to each other in a room so the kids can't hear them
+  }
+
 })
 
 .directive('testDirective', function () {
@@ -39,7 +45,10 @@ config(['$locationProvider', '$routeProvider', function($locationProvider, $rout
     link: function ($scope, elem, attrs) {
       $scope.runTestDirectiveFn = function() {
         $scope.testDirectiveFn({arg: 'arg from directive'});
-      }
+      };
+      $scope.$on("globalEvent", function() {
+        console.log('on global event from directive');
+      })
     },
     template: '<div><h3>test directive with {{testProperty}}</h3>' +
     '<button ng-click="runTestDirectiveFn()">Change Data</button>',
